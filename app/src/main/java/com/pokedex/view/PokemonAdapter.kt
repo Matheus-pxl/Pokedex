@@ -7,34 +7,36 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.pokedex.R
 import com.pokedex.domain.Pokemon
 
 class PokemonAdapter(
-    private val items: List<Pokemon>
+    private val items: List<Pokemon?>
 ) : RecyclerView.Adapter<PokemonAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         @SuppressLint("SetTextI18n")
-        fun bindView(item: Pokemon) = with(itemView) {
+        fun bindView(item: Pokemon?) = with(itemView) {
             val imagePokemon = findViewById<ImageView>(R.id.imageViewPokemon)
             val textNumber = findViewById<TextView>(R.id.textNumeroPokemon)
             val textNome = findViewById<TextView>(R.id.textNomePokemon)
             val textType1 = findViewById<TextView>(R.id.textTypeElemento1)
             val textType2 = findViewById<TextView>(R.id.textTypeElemento2)
 
-            //TODO load imagem with glide
+            item?.let {
+                Glide.with(itemView.context).load(it.imageUrl).into(imagePokemon)
 
+                textNumber.text = "N° ${item.formattedNumber}"
+                textNome.text = item.formattedName
+                textType1.text = item.types[0].name.capitalize()
 
-            textNumber.text = "N° ${item.formattedNumber}"
-            textNome.text = item.name
-            textType1.text = item.types[0].name
-
-            if(item.types.size > 1){
-                textType2.visibility = View.VISIBLE
-                textType2.text = item.types[1].name
-            }else{
-                textType2.visibility = View.GONE
+                if (item.types.size > 1) {
+                    textType2.visibility = View.VISIBLE
+                    textType2.text = item.types[1].name.capitalize()
+                } else {
+                    textType2.visibility = View.GONE
+                }
             }
         }
     }

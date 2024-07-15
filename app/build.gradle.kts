@@ -33,8 +33,8 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    viewBinding{
-        enable =true
+    viewBinding {
+        enable = true
     }
 }
 
@@ -42,6 +42,8 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")  // (ou converter para outro formato, como Moshi)
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.2")  // (opcional, para logging das requisições)
+    implementation("com.github.bumptech.glide:glide:4.12.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
