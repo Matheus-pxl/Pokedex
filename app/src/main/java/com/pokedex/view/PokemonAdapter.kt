@@ -14,7 +14,6 @@ class PokemonAdapter(
     private val items: List<Pokemon>
 ) : RecyclerView.Adapter<PokemonAdapter.ViewHolder>() {
 
-
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         @SuppressLint("SetTextI18n")
         fun bindView(item: Pokemon) = with(itemView) {
@@ -27,7 +26,7 @@ class PokemonAdapter(
             //TODO load imagem with glide
 
 
-            textNumber.text = "N° ${item.number}"
+            textNumber.text = "N° ${item.formattedNumber}"
             textNome.text = item.name
             textType1.text = item.types[0].name
 
