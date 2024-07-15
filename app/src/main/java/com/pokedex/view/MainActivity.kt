@@ -2,17 +2,25 @@ package com.pokedex.view
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.pokedex.api.model.PokemonRepository
 import com.pokedex.databinding.ActivityMainBinding
 import com.pokedex.domain.Pokemon
+import com.pokedex.viewModel.PokemonViewModel
+import com.pokedex.viewModel.PokemonViewModelFactory
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     lateinit var recyclerView: RecyclerView
 
-    var pokemons = emptyList<Pokemon?>()
+
+    val viewModel by lazy{
+        ViewModelProvider(this, PokemonViewModelFactory()).get(PokemonViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,52 +28,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         recyclerView = binding.recyclerViewPokemons
 
-        if (pokemons.isEmpty()) {
-            Thread(Runnable {
-                loadPokemons()
-            }).start()
-        } else {
-            loadRecyclerView()
-        }
+        viewModel.pokemons.observe(this,Observer{
+            loadRecyclerView(it)
+        })
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-
-
-    }
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-    }
-
-
-    private fun loadPokemons() {
-        val pokemonsApiResult = PokemonRepository.listPokemons()
-        pokemonsApiResult?.results?.let {
-            pokemons = it.map { pokemonResult ->
-                val number =
-                    pokemonResult.url
-                        .replace("https://pokeapi.co/api/v2/pokemon/", "")
-                        .replace("/", "").toInt()
-                val pokemonApiResult = PokemonRepository.getPokemon(number)
-
-                pokemonApiResult?.let {
-                    Pokemon(
-                        pokemonApiResult.id,
-                        pokemonApiResult.name,
-                        pokemonApiResult.types.map { type ->
-                            type.type
-                        }
-                    )
-                }
-            }
-            recyclerView.post {
-                loadRecyclerView()
-            }
-        }
-    }
-
-    private fun loadRecyclerView() {
+    private fun loadRecyclerView(pokemons : List<Pokemon?>) {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = PokemonAdapter(pokemons)
     }

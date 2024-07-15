@@ -1,6 +1,4 @@
 package com.pokedex.api.model
-import com.pokedex.api.model.PokemonApiResult
-import com.pokedex.api.model.PokemonsApiResult
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path

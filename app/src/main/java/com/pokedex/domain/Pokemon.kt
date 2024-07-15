@@ -1,7 +1,5 @@
 package com.pokedex.domain
 
-import com.pokedex.domain.PokemonType
-
 data class Pokemon (
     val number:Int,
     val name:String,
